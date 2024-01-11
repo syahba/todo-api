@@ -63,8 +63,22 @@ const getDetailTodo = async (req, res) => {
   };
 };
 
+const updateTodo = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await Todo.findByIdAndUpdate(id, req.body);
+
+    return res.status(200).send({ message: 'Success updated todo' });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ message: 'Internal server error' });
+  };
+};
+
 module.exports = {
   createTodo,
   getTodo,
-  getDetailTodo
+  getDetailTodo,
+  updateTodo
 };
