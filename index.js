@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const user = require('./routes/user');
+const todo = require('./routes/todo');
 require('dotenv').config();
 
 app.listen(process.env.PORT, () => {
@@ -18,3 +19,4 @@ db.once('open', () => console.log('We are connected'));
 
 // routes
 app.use(user);
+app.use(todo);

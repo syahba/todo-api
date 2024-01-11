@@ -20,7 +20,7 @@ const registerUser = async (req, res) => {
     };
     await User.create(payload);
 
-    return res.status(201).send({ message: 'User created' });
+    return res.status(201).send({ message: 'Success created user' });
   } catch (err) {
     console.log(err.message);
     return res.status(500).send({ message: 'Internal server error' });
