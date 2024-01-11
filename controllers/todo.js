@@ -21,6 +21,33 @@ const createTodo = async (req, res) => {
   };
 };
 
+const getTodo = async (req, res) => {
+  try {
+    const { id } = req.user;
+    
+    const data = await Todo.find({ userId: id });
+    if (data.length == 0) {
+      return res.status(404).send({ message: 'No existing data' });
+    };
+
+    const result = data.map(v => {
+      const obj = {
+        id: v._id,
+        title: v.title,
+        isCompleted: v.isCompleted
+      };
+
+      return obj;
+    });
+
+    return res.status(200).send(result);
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ message: 'Internal server error' });
+  };
+};
+
 module.exports = {
-  createTodo
+  createTodo,
+  getTodo
 };
