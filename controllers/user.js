@@ -55,7 +55,24 @@ const loginUser = async (req, res) => {
   };
 };
 
+const getDetailUser = async (req, res) => {
+  try {
+    const { id } = req.user;
+
+    const data = await User.findById(id);
+    if (!data) {
+      res.status(404).send({ message: 'Data not found' });
+    };
+
+    return res.status(200).send(data);
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ message: 'Internal server error' });
+  };
+};
+
 module.exports = {
   registerUser,
-  loginUser
+  loginUser,
+  getDetailUser
 };
