@@ -5,6 +5,10 @@ const createTodo = async (req, res) => {
     const { title, description } = req.body;
     const { id } = req.user;
 
+    if (!title || !description) {
+      return res.status(400).send({ message: 'Invalid data' });
+    };
+
     const payload = {
       title,
       description: description ? description : '',

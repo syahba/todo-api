@@ -8,6 +8,10 @@ const registerUser = async (req, res) => {
   try {
     const { username, password } = req.body;
 
+    if (/\s/.test(username)) {
+      return res.status(400).send({ message: 'Username cannot contain spaces' });
+    };
+
     const hashedPassword = bcrypt.hashSync(password, 10);
 
     const data = await User.findOne({ username });
@@ -62,7 +66,7 @@ const getDetailUser = async (req, res) => {
 
     const data = await User.findById(id);
     if (!data) {
-      res.status(404).send({ message: 'User not found' });
+      return res.status(404).send({ message: 'User not found' });
     };
 
     return res.status(200).send(data);
