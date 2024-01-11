@@ -30,15 +30,15 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
-
+    
     const data = await User.findOne({ username });
     if (!data) {
-      res.status(401).send({ message: 'User is not registered' });
+      return res.status(401).send({ message: 'User is not registered' });
     };
 
     const checkPassword = bcrypt.compareSync(password, data.password);
     if (!checkPassword) {
-      return res.status(401).send('Wrong password');
+      return res.status(401).send({ message: 'Wrong password'});
     };
 
     const payload = {
