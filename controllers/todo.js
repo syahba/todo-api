@@ -24,7 +24,7 @@ const createTodo = async (req, res) => {
 const getTodo = async (req, res) => {
   try {
     const { id } = req.user;
-    
+
     const data = await Todo.find({ userId: id });
     if (data.length == 0) {
       return res.status(404).send({ message: 'No existing data' });
@@ -47,7 +47,24 @@ const getTodo = async (req, res) => {
   };
 };
 
+const getDetailTodo = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const data = await Todo.findById(id);
+    if (!data) {
+      return res.status(404).send({ message: 'Data not found' });
+    };
+
+    return res.status(200).send(data);
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ message: 'Internal server error' });
+  };
+};
+
 module.exports = {
   createTodo,
-  getTodo
+  getTodo,
+  getDetailTodo
 };
