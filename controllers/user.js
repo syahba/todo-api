@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const Todo = require('../models/todo');
 require('dotenv').config();
 
 const registerUser = async (req, res) => {
@@ -61,7 +62,7 @@ const getDetailUser = async (req, res) => {
 
     const data = await User.findById(id);
     if (!data) {
-      res.status(404).send({ message: 'Data not found' });
+      res.status(404).send({ message: 'User not found' });
     };
 
     return res.status(200).send(data);
@@ -71,8 +72,27 @@ const getDetailUser = async (req, res) => {
   };
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.user;
+
+    const data = await User.findByIdAndDelete(id);
+    if (!data) {
+      return res.status(404).send({ message: 'User not found' });
+    };
+
+    await Todo.deleteMany({ userId: id });
+
+    return res.status(200).send({ message: 'Success deleted user' });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ message: 'Internal server error' });
+  };
+};
+
 module.exports = {
   registerUser,
   loginUser,
-  getDetailUser
+  getDetailUser,
+  deleteUser
 };
