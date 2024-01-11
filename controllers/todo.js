@@ -14,7 +14,7 @@ const createTodo = async (req, res) => {
 
     await Todo.create(payload);
     
-    return res.status(201).send({ message: 'Success created todo' });
+    return res.status(201).send({ message: 'Success created data' });
   } catch (err) {
     console.log(err.message);
     return res.status(500).send({ message: 'Internal server error' });
@@ -72,7 +72,7 @@ const updateTodo = async (req, res) => {
       return res.status(404).send({ message: 'Data not found' });
     };
 
-    return res.status(200).send({ message: 'Success updated todo' });
+    return res.status(200).send({ message: 'Success updated data' });
   } catch (err) {
     console.log(err.message);
     return res.status(500).send({ message: 'Internal server error' });
@@ -88,7 +88,23 @@ const deleteTodo = async (req, res) => {
       return res.status(404).send({ message: 'Data not found' });
     };
 
-    return res.status(200).send({ message: 'Success deleted todo' });
+    return res.status(200).send({ message: 'Success deleted data' });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ message: 'Internal server error' });
+  };
+};
+
+const deleteAllTodo = async (req, res) => {
+  try {
+    const { id } = req.user;
+
+    const { deletedCount } = await Todo.deleteMany({ userId: id });
+    if (deletedCount == 0) {
+      return res.status(404).send({ message: 'No existing data' });
+    }
+
+    return res.status(200).send({ message: 'Success deleted all data' });
   } catch (err) {
     console.log(err.message);
     return res.status(500).send({ message: 'Internal server error' });
@@ -100,5 +116,6 @@ module.exports = {
   getTodo,
   getDetailTodo,
   updateTodo,
-  deleteTodo
+  deleteTodo,
+  deleteAllTodo
 };
