@@ -67,9 +67,28 @@ const updateTodo = async (req, res) => {
   try {
     const { id } = req.params;
 
-    await Todo.findByIdAndUpdate(id, req.body);
+    const data = await Todo.findByIdAndUpdate(id, req.body);
+    if (!data) {
+      return res.status(404).send({ message: 'Data not found' });
+    };
 
     return res.status(200).send({ message: 'Success updated todo' });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ message: 'Internal server error' });
+  };
+};
+
+const deleteTodo = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const data = await Todo.findByIdAndDelete(id);
+    if (!data) {
+      return res.status(404).send({ message: 'Data not found' });
+    };
+
+    return res.status(200).send({ message: 'Success deleted todo' });
   } catch (err) {
     console.log(err.message);
     return res.status(500).send({ message: 'Internal server error' });
@@ -80,5 +99,6 @@ module.exports = {
   createTodo,
   getTodo,
   getDetailTodo,
-  updateTodo
+  updateTodo,
+  deleteTodo
 };
