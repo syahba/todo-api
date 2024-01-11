@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const user = require('./routes/user');
 require('dotenv').config();
 
 app.listen(process.env.PORT, () => {
@@ -14,3 +15,6 @@ mongoose.connect(process.env.DB_URL);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection error'));
 db.once('open', () => console.log('We are connected'));
+
+// routes
+app.use(user);
