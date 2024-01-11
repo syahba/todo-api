@@ -7,25 +7,23 @@ const registerUser = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const hashedPassword = bcrypt.hashSync(password, 10); // hashing password with bcrypt
+    const hashedPassword = bcrypt.hashSync(password, 10);
 
     const data = await User.findOne({ username });
-
-    if (!data) {
-      const payload = {
-        username,
-        password: hashedPassword
-      };
-
-      await User.create(payload);
-
-      res.status(201).send({ message: 'User created' });
-    } else {
-      res.status(409).send({ message: 'User already exists' });
+    if (data) {
+      return res.status(409).send({ message: 'User already exists' });
     };
+
+    const payload = {
+      username,
+      password: hashedPassword
+    };
+    await User.create(payload);
+
+    return res.status(201).send({ message: 'User created' });
   } catch (err) {
     console.log(err.message);
-    res.status(500).send({ message: 'Internal server error' });
+    return res.status(500).send({ message: 'Internal server error' });
   };
 };
 
@@ -34,27 +32,26 @@ const loginUser = async (req, res) => {
     const { username, password } = req.body;
 
     const data = await User.findOne({ username });
-    if (data) {
-      const checkPassword = bcrypt.compareSync(password, data.password);
-
-      if (checkPassword) {
-        const payload = {
-          id: data.id,
-          username,
-          password
-        };
-        const token = jwt.sign(payload, process.env.SECRET_KEY);
-
-        res.status(200).json({ token });
-      } else {
-        res.status(401).send('Wrong password');
-      };
-    } else {
+    if (!data) {
       res.status(401).send({ message: 'User is not registered' });
     };
+
+    const checkPassword = bcrypt.compareSync(password, data.password);
+    if (!checkPassword) {
+      return res.status(401).send('Wrong password');
+    };
+
+    const payload = {
+      id: data.id,
+      username,
+      password
+    };
+    const token = jwt.sign(payload, process.env.SECRET_KEY);
+
+    return res.status(200).json({ token });
   } catch (err) {
     console.log(err.message);
-    res.status(500).send({ message: 'Internal server error' });
+    return res.status(500).send({ message: 'Internal server error' });
   };
 };
 
