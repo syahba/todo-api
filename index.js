@@ -12,7 +12,7 @@ const connectDB = async () => {
   console.log('function connect db');
   try {
     console.log('about to try mongoose connection');
-    const conn = await mongoose.connect(process.env.DB_URL);
+    const conn = await mongoose.createConnection(process.env.DB_URL);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (err) {
     console.log(err);
@@ -32,7 +32,7 @@ app.use(todo);
 
 // connect to the database before listening
 connectDB().then(() => {
-  console.log('tes masuk');
+  console.log('db connected, now listening');
   app.listen(port, () => {
     console.log(`Listening for requests on port ${port}`);
   });
