@@ -8,26 +8,18 @@ require('dotenv').config();
 const port = process.env.PORT || 3000;
 console.log(process.env.PORT);
 
-const connectDB = async () => {
+const connectDB = () => {
   console.log('function connect db');
   try {
     console.log('about to try mongoose connection');
     console.log(process.env.DB_URL);
-    const conn = await mongoose.connect(process.env.DB_URL);
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    mongoose.connect(process.env.DB_URL);
+    console.log(`MongoDB Connected`);
   } catch (err) {
     console.log(err);
     process.exit(1);
   };
 };
-
-// connect to the database before listening
-connectDB().then(() => {
-  console.log('db connected, now listening');
-  app.listen(port, () => {
-    console.log(`Listening for requests on port ${port}`);
-  });
-});
 
 app.use(express.json()); // parsing requests
 app.get('/', (req, res) => {
@@ -38,3 +30,11 @@ app.get('/', (req, res) => {
 // routes
 app.use(user);
 app.use(todo);
+
+// connect to the database before listening
+connectDB().then(() => {
+  console.log('db connected, now listening');
+  app.listen(port, () => {
+    console.log(`Listening for requests on port ${port}`);
+  });
+});
