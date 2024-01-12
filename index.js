@@ -5,6 +5,8 @@ const user = require('./routes/user');
 const todo = require('./routes/todo');
 require('dotenv').config();
 
+const port = process.env.PORT || 3000;
+
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.DB_URL);
@@ -23,7 +25,7 @@ app.use(todo);
 
 // connect to the database before listening
 connectDB().then(() => {
-  app.listen(process.env.PORT, () => {
-    console.log(`Listening for requests on port ${process.env.PORT}`);
+  app.listen(port, () => {
+    console.log(`Listening for requests on port ${port}`);
   });
 });
