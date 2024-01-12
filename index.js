@@ -8,33 +8,24 @@ require('dotenv').config();
 const port = process.env.PORT || 3000;
 console.log(process.env.PORT);
 
-const connectDB = () => {
-  console.log('function connect db');
-  try {
-    console.log('about to try mongoose connection');
-    console.log(process.env.DB_URL);
-    mongoose.connect(process.env.DB_URL);
-    console.log(`MongoDB Connected`);
-  } catch (err) {
-    console.log(err);
-    process.exit(1);
-  };
-};
+// connect to database
+console.log('trying to connect');
+mongoose.connect(process.env.DB_URL);
+console.log('now checking connection');
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'Connection error'));
+db.once('open', () => console.log('We are connected'));
 
-app.use(express.json()); // parsing requests
-app.get('/', (req, res) => {
-  console.log('this is entry point');
-  res.json({ message: 'Conneced' });
+app.listen(port, () => {
+  console.log(`Listening on port: ${port}`);
 });
+
+app.use(express.json()); // parsing request
+app.get('/', (req, res) => {
+  console.log('success get');
+  res.json({ message: 'First connection is made' });
+})
 
 // routes
-app.use(user);
 app.use(todo);
-
-// connect to the database before listening
-connectDB().then(() => {
-  console.log('db connected, now listening');
-  app.listen(port, () => {
-    console.log(`Listening for requests on port ${port}`);
-  });
-});
+app.use(user);
