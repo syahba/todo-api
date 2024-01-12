@@ -29,6 +29,7 @@ app.use(todo);
 
 // connect to the database before listening
 connectDB().then(() => {
+  console.log('tes masuk');
   app.listen(port, () => {
     console.log(`Listening for requests on port ${port}`);
   });
