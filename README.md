@@ -22,7 +22,7 @@ This repository is a back-end app management for to-do list. It is created using
   - [DELETE /todos](#delete-todos)
 - [Task API Examples](#task-api-examples)
 
-## installation
+## Installation
 
 1. Clone this repository:
 
