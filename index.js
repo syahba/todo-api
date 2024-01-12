@@ -5,18 +5,25 @@ const user = require('./routes/user');
 const todo = require('./routes/todo');
 require('dotenv').config();
 
-app.listen(process.env.PORT, () => {
-  console.log(`Listening on port: ${process.env.PORT}`);
-});
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.DB_URL);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (err) {
+    console.log(err);
+    process.exit(1);
+  };
+};
 
-app.use(express.json()); // parsing request
-
-// connect to database
-mongoose.connect(process.env.DB_URL);
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'Connection error'));
-db.once('open', () => console.log('We are connected'));
+app.use(express.json()); // parsing requests
 
 // routes
 app.use(user);
 app.use(todo);
+
+// connect to the database before listening
+connectDB().then(() => {
+  app.listen(process.env.PORT, () => {
+    console.log(`Listening for requests on port ${process.env.PORT}`);
+  });
+});
