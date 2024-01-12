@@ -9,7 +9,9 @@ const port = process.env.PORT || 3000;
 console.log(process.env.PORT);
 
 const connectDB = async () => {
+  console.log('function connect db');
   try {
+    console.log('about to try mongoose connection');
     const conn = await mongoose.connect(process.env.DB_URL);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (err) {
@@ -20,6 +22,7 @@ const connectDB = async () => {
 
 app.use(express.json()); // parsing requests
 app.get('/', (req, res) => {
+  console.log('this is entry point');
   res.json({ message: 'Conneced' });
 });
 
