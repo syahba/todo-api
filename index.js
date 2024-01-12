@@ -18,6 +18,9 @@ const connectDB = async () => {
 };
 
 app.use(express.json()); // parsing requests
+app.get('/', (req, res) => {
+  res.json({ message: 'Conneced' });
+});
 
 // routes
 app.use(user);
