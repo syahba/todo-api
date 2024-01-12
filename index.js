@@ -13,13 +13,21 @@ const connectDB = async () => {
   try {
     console.log('about to try mongoose connection');
     console.log(process.env.DB_URL);
-    await mongoose.connect(process.env.DB_URL);
-    console.log(`MongoDB Connected`);
+    const conn = await mongoose.connect(process.env.DB_URL);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (err) {
     console.log(err);
     process.exit(1);
   };
 };
+
+// connect to the database before listening
+connectDB().then(() => {
+  console.log('db connected, now listening');
+  app.listen(port, () => {
+    console.log(`Listening for requests on port ${port}`);
+  });
+});
 
 app.use(express.json()); // parsing requests
 app.get('/', (req, res) => {
@@ -30,11 +38,3 @@ app.get('/', (req, res) => {
 // routes
 app.use(user);
 app.use(todo);
-
-// connect to the database before listening
-connectDB().then(() => {
-  console.log('db connected, now listening');
-  app.listen(port, () => {
-    console.log(`Listening for requests on port ${port}`);
-  });
-});
